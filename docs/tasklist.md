@@ -80,7 +80,7 @@
 
 ### ローカル動作確認
 
-- [ ] `.dev.vars` を作成する（Wrangler がローカル実行時に自動で読み込む。`.gitignore` 登録済みであることを確認）
+- [x] `.dev.vars` を作成する（Wrangler がローカル実行時に自動で読み込む。`.gitignore` 登録済みであることを確認）
   ```
   BETTER_AUTH_SECRET=<openssl rand -base64 32 で生成した値を貼り付け>
   RESEND_API_KEY=<Resend ダッシュボード → API Keys から取得した値を貼り付け>
@@ -88,8 +88,8 @@
   SKIP_EMAIL_VERIFICATION=true
   # ALLOWED_ORIGINS は未設定でワイルドカード（*）が適用されるため省略可
   ```
-- [ ] `wrangler d1 migrations apply todo-db --local` でローカル D1 へマイグレーション適用
-- [ ] `wrangler dev` でローカルサーバーを起動して動作確認
+- [x] `wrangler d1 migrations apply todo-db --local` でローカル D1 へマイグレーション適用
+- [x] `wrangler dev` でローカルサーバーを起動して動作確認
 
 > **環境ごとの変数の流れ**
 >

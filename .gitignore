@@ -215,3 +215,5 @@ vite.config.ts.timestamp-*
 *.vsix
 
 note.md
+.dev.vars
+.wrangler
