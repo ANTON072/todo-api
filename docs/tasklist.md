@@ -55,10 +55,10 @@
 
 - [x] `src/index.ts` — アプリ初期化・ミドルウェア登録・better-auth マウント・ルートマウント
 
-### Phase 7: OpenAPI 生成
+### Phase 7: OpenAPI / Swagger UI
 
-- [x] `scripts/gen-openapi.ts` — `openapi.json` 生成スクリプト
-- [x] `pnpm run gen-openapi` で `openapi.json` を生成・確認
+- [x] `GET /api/docs/openapi.json` — OpenAPI スペックを動的に配信
+- [x] `GET /api/docs` — Swagger UI（`@hono/swagger-ui`）
 
 ### Phase 8: テスト
 
@@ -72,7 +72,6 @@
 - [x] `pnpm typecheck` パス
 - [x] `pnpm check` パス
 - [x] `pnpm test` パス
-- [x] `openapi.json` 再生成・コミット
 
 ---
 

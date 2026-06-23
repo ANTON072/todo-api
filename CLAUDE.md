@@ -16,7 +16,6 @@ Cloudflare Workers + D1 で動くシンプルな TODO REST API。
 | `pnpm typecheck` | TypeScript 型チェック |
 | `pnpm check` | Biome lint + format（自動修正あり） |
 | `pnpm test` | 結合テスト（Vitest + Workerd） |
-| `pnpm run gen-openapi` | `openapi.json` 生成 |
 | `pnpm wrangler dev` | ローカル開発サーバー起動 |
 | `pnpm wrangler deploy` | Cloudflare Workers へデプロイ |
 | `pnpm drizzle-kit generate` | マイグレーションファイル生成 |
