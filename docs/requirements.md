@@ -58,10 +58,35 @@ TodoアプリのREST APIを作ります。
 
 ## エラーレスポンス
 
-全エラーは以下の形式で返す:
+全エラーは [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457) 形式で返す。
+Content-Type は `application/problem+json`。
 
 ```json
-{ "error": "エラーメッセージ" }
+{
+  "type": "about:blank",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Todo 'abc123' was not found"
+}
+```
+
+| フィールド | 必須 | 説明 |
+|---|---|---|
+| `type` | ○ | 常に `"about:blank"`（HTTP ステータスフレーズがそのまま `title` になる） |
+| `title` | ○ | HTTP ステータスフレーズ（例: `"Not Found"`） |
+| `status` | ○ | HTTP ステータスコード |
+| `detail` | △ | この発生固有の人間可読な説明 |
+
+バリデーションエラーは `errors` 拡張フィールドに詳細を付加する:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Unprocessable Entity",
+  "status": 422,
+  "detail": "Request body validation failed",
+  "errors": [{ "path": ["title"], "message": "Required" }]
+}
 ```
 
 | ケース | ステータス |

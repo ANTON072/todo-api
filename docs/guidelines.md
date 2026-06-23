@@ -59,7 +59,20 @@ export const listTodosRoute = app
 const app = new OpenAPIHono<{ Bindings: Env }>({
   defaultHook: (result, c) => {
     if (!result.success) {
-      return c.json({ error: result.error.message }, 422)
+      return c.json(
+        {
+          type: "about:blank",
+          title: "Unprocessable Entity",
+          status: 422,
+          detail: "Request body validation failed",
+          errors: result.error.errors.map((e) => ({
+            path: e.path.map(String),
+            message: e.message,
+          })),
+        },
+        422,
+        { "Content-Type": "application/problem+json" },
+      )
     }
   },
 })
@@ -67,7 +80,8 @@ const app = new OpenAPIHono<{ Bindings: Env }>({
 
 ## エラーレスポンス
 
-全エラーは `{ "error": "メッセージ" }` 形式で返す。
+全エラーは [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457) 形式で返す。
+Content-Type は `application/problem+json`。
 
 ```typescript
 // lib/errors.ts
@@ -77,16 +91,30 @@ export class NotFoundError extends Error {}
 export class ValidationError extends Error {}
 ```
 
-エラーハンドラーで一元的にステータスコードへマッピングする。ルートハンドラー内で直接 `c.json({ error: ... }, 4xx)` を返さない。
+エラーハンドラーで一元的にステータスコードへマッピングする。ルートハンドラー内で直接 `c.json(...)` を返さない。
 
-| エラークラス | ステータス |
-|---|---|
-| UnauthorizedError | 401 |
-| ForbiddenError | 403 |
-| NotFoundError | 404 |
-| ValidationError | 422 |
-| HTTPException (Hono) | そのまま使用 |
-| その他 | 500 |
+| エラークラス | ステータス | title |
+|---|---|---|
+| UnauthorizedError | 401 | `Unauthorized` |
+| ForbiddenError | 403 | `Forbidden` |
+| NotFoundError | 404 | `Not Found` |
+| ValidationError | 422 | `Unprocessable Entity` |
+| HTTPException (Hono) | そのまま使用 | — |
+| その他 | 500 | `Internal Server Error` |
+
+```typescript
+// middleware/error-handler.ts の実装例
+c.json(
+  {
+    type: "about:blank",
+    title: "Not Found",
+    status: 404,
+    detail: err.message,
+  },
+  404,
+  { "Content-Type": "application/problem+json" },
+)
+```
 
 ## 認証
 
