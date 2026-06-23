@@ -10,13 +10,6 @@
     "node": ">=24"
   },
   "packageManager": "pnpm@11.8.0",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.8.0",
-      "onFail": "download"
-    }
-  },
   "type": "module",
   "dependencies": {
     "@hono/zod-openapi": "^1.4.0",

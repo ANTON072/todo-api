@@ -2,9 +2,9 @@
 
 ## Step 1: 実装前の準備（人間が実施）
 
-- [ ] `wrangler login` で Cloudflare 認証
-- [ ] `wrangler d1 create todo-db` で D1 データベース作成（出力の `database_id` を控える）
-- [ ] Resend アカウント作成・API キー取得
+- [x] `wrangler login` で Cloudflare 認証
+- [x] `wrangler d1 create todo-db` で D1 データベース作成（出力の `database_id` を控える）
+- [x] Resend アカウント作成・API キー取得
 
 ---
 
