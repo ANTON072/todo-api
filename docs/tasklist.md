@@ -1,9 +1,5 @@
 # 実装タスクリスト
 
-> **作業開始前に必ず読むこと:**
-> - `docs/requirements.md` — 要件定義（機能・エンドポイント・データモデル）
-> - `docs/guidelines.md` — コーディング規約（構成・パターン・スタイル）
-
 ## Step 1: 実装前の準備（人間が実施）
 
 - [ ] `wrangler login` で Cloudflare 認証
