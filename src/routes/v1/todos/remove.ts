@@ -10,6 +10,8 @@ const paramsSchema = z.object({ todoId: z.string() });
 const route = createRoute({
   method: "delete",
   path: "/{todoId}",
+  security: [{ bearerAuth: [] }],
+  tags: ["todos"],
   request: { params: paramsSchema },
   responses: {
     204: { description: "No Content" },

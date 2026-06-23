@@ -21,6 +21,8 @@ const todoSchema = z.object({
 const route = createRoute({
   method: "get",
   path: "/{todoId}",
+  security: [{ bearerAuth: [] }],
+  tags: ["todos"],
   request: { params: paramsSchema },
   responses: {
     200: {

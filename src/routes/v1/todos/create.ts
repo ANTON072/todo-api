@@ -25,6 +25,8 @@ const todoSchema = z.object({
 const route = createRoute({
   method: "post",
   path: "/",
+  security: [{ bearerAuth: [] }],
+  tags: ["todos"],
   request: {
     body: {
       content: { "application/json": { schema: bodySchema } },

@@ -28,6 +28,8 @@ const todoSchema = z.object({
 const route = createRoute({
   method: "put",
   path: "/{todoId}",
+  security: [{ bearerAuth: [] }],
+  tags: ["todos"],
   request: {
     params: paramsSchema,
     body: {

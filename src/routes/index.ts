@@ -1,10 +1,17 @@
 import { swaggerUI } from "@hono/swagger-ui";
 import { createHono } from "../lib/hono";
+import { authDocsRouter } from "./auth";
 import { todosRouter } from "./v1/todos/index";
 
 const app = createHono();
 
+app.route("/api/auth", authDocsRouter);
 app.route("/api/v1/todos", todosRouter);
+
+app.openAPIRegistry.registerComponent("securitySchemes", "bearerAuth", {
+  type: "http",
+  scheme: "bearer",
+});
 
 app.doc("/api/docs/openapi.json", {
   openapi: "3.0.0",

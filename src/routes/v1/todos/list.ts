@@ -32,6 +32,8 @@ const responseSchema = z.object({
 const route = createRoute({
   method: "get",
   path: "/",
+  security: [{ bearerAuth: [] }],
+  tags: ["todos"],
   request: { query: querySchema },
   responses: {
     200: {
