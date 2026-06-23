@@ -88,6 +88,13 @@ TodoアプリのREST APIを作ります。
 
 ※ users テーブルは better-auth が自動生成
 
+## CORS
+
+- `ALLOWED_ORIGINS` 環境変数（カンマ区切り）でホワイトリストを設定する
+  - 例: `https://example.com,https://app.example.com`
+- `ALLOWED_ORIGINS` が未設定の場合はワイルドカード（`*`）を使用する（ローカル開発向け）
+- Hono の `cors()` ミドルウェアで実装する
+
 ## サーバー要件
 
 - Cloudflare Workers
