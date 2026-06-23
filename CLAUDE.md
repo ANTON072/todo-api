@@ -8,6 +8,7 @@ Cloudflare Workers + D1 で動くシンプルな TODO REST API。
 
 - `docs/requirements.md` — 要件定義（機能・エンドポイント・データモデル）
 - `docs/guidelines.md` — コーディング規約（**ファイルを編集・作成する前に必ず読むこと**）
+- `docs/auth-sequence.md` - 認証系シーケンス図
 
 ## コマンド
 
