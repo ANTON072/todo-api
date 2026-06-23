@@ -4,7 +4,10 @@
   "scripts": {
     "test": "vitest run",
     "check": "biome check --write",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "gen-openapi": "tsx scripts/gen-openapi.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "engines": {
     "node": ">=24"
@@ -17,12 +20,13 @@
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.26",
     "resend": "^6.14.0",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
     "@cloudflare/vitest-pool-workers": "^0.16.18",
     "@cloudflare/workers-types": "^4.20260621.1",
+    "@types/node": "^26.0.0",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
