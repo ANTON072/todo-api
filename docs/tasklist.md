@@ -39,17 +39,19 @@
 
 ### Phase 4: ミドルウェア
 
-- [ ] `src/middleware/cors.ts` — CORSミドルウェア（`ALLOWED_ORIGINS` 環境変数でホワイトリスト管理。未設定時はワイルドカード `*`）
-- [ ] `src/middleware/auth.ts` — `requireAuth`（Bearer トークン検証・`c.set("user", user)`）
+- [ ] `src/middleware/cors.ts` — CORSミドルウェア（仕様: [requirements.md § CORS](requirements.md#cors)）
+- [ ] `src/middleware/auth.ts` — `requireAuth`（`c.set("user", user)`; 仕様: [requirements.md § 主な要件](requirements.md#主な要件)）
 - [ ] `src/middleware/error-handler.ts` — エラーハンドラー（エラークラス→ HTTP ステータスのマッピング）
 
 ### Phase 5: TODO エンドポイント
 
-- [ ] `src/routes/v1/todos/list.ts` — `GET /api/v1/todos`（ページング・ソート・フィルタ）
-- [ ] `src/routes/v1/todos/create.ts` — `POST /api/v1/todos`（201 + todo）
+> 各エンドポイントの仕様: [requirements.md § TODO エンドポイント](requirements.md#todo)
+
+- [ ] `src/routes/v1/todos/list.ts` — `GET /api/v1/todos`
+- [ ] `src/routes/v1/todos/create.ts` — `POST /api/v1/todos`
 - [ ] `src/routes/v1/todos/detail.ts` — `GET /api/v1/todos/:todoId`
-- [ ] `src/routes/v1/todos/update.ts` — `PUT /api/v1/todos/:todoId`（完全置換）
-- [ ] `src/routes/v1/todos/remove.ts` — `DELETE /api/v1/todos/:todoId`（204）
+- [ ] `src/routes/v1/todos/update.ts` — `PUT /api/v1/todos/:todoId`
+- [ ] `src/routes/v1/todos/remove.ts` — `DELETE /api/v1/todos/:todoId`
 - [ ] `src/routes/v1/todos/index.ts` — todos ルート集約
 - [ ] `src/routes/index.ts` — 全ルート集約
 
@@ -64,8 +66,10 @@
 
 ### Phase 8: テスト
 
+> テスト仕様: [requirements.md § テスト計画](requirements.md#テスト計画)
+
 - [ ] `tests/auth.test.ts` — 認証エンドポイントの結合テスト
-- [ ] `tests/todos.test.ts` — TODO エンドポイントの結合テスト（正常系 + 401 / 403 / 404 / 422）
+- [ ] `tests/todos.test.ts` — TODO エンドポイントの結合テスト
 
 ### Phase 9: 最終確認
 
