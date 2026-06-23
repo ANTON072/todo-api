@@ -100,12 +100,15 @@
 
 ### 本番デプロイ
 
-- [ ] 本番シークレットを登録する（各コマンドを実行すると入力プロンプトが出るので値を貼り付ける）
+- [x] 本番シークレットを登録する（各コマンドを実行すると入力プロンプトが出るので値を貼り付ける）
   ```sh
   wrangler secret put BETTER_AUTH_SECRET   # .dev.vars と同じ値を使うか新たに生成
   wrangler secret put RESEND_API_KEY        # Resend ダッシュボードから取得した値
-  wrangler secret put APP_URL               # wrangler deploy 後に表示される Workers URL（例: https://todo-api.username.workers.dev）
-  wrangler secret put ALLOWED_ORIGINS       # カンマ区切りの許可オリジン（例: https://example.com,https://app.example.com）
   ```
-- [ ] `wrangler d1 migrations apply todo-db` で本番 D1 へマイグレーション適用
-- [ ] `wrangler deploy`
+- [x] `wrangler d1 migrations apply todo-db --remote` で本番 D1 へマイグレーション適用
+- [x] `wrangler deploy`
+- [ ] 環境変数のセット
+  ```sh
+  wrangler secret put APP_URL               # wrangler deploy 後に表示される Workers URL（例: https://todo-api.username.workers.dev）
+  wrangler secret put ALLOWED_ORIGINS       # カンマ区切りの許可オリジン（例: https://example.com,https://app.example.com）  ```
+```
