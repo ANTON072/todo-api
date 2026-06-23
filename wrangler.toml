@@ -1,15 +1,19 @@
-name = "todo-api"
-main = "src/index.ts"
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
+main = "src/index.ts"
+name = "todo-api"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "todo-db"
 database_id = "52a8e637-705a-451f-8fb2-255b71930635"
+database_name = "todo-db"
 migrations_dir = "drizzle/migrations"
 
 [vars]
 # SKIP_EMAIL_VERIFICATION is set here for test environment convenience.
 # In production, do not set this (or set it to "false").
 SKIP_EMAIL_VERIFICATION = "false"
+
+[observability.logs]
+enabled = true
+invocation_logs = true
