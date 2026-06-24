@@ -5,7 +5,8 @@
     "test": "vitest run",
     "check": "biome check --write",
     "typecheck": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "gen:schema": "tsx scripts/generate-openapi.ts > docs/openapi.json"
   },
   "engines": {
     "node": ">=24"
@@ -27,6 +28,7 @@
     "@cloudflare/workers-types": "^4.20260621.1",
     "@types/node": "^26.0.0",
     "drizzle-kit": "^0.31.10",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9",
     "wrangler": "^4.103.0"
