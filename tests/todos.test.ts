@@ -86,8 +86,9 @@ describe("GET /api/v1/todos", () => {
       body: JSON.stringify({ title: "First" }),
     });
     // Wait until the next Unix second so "Second" gets a strictly larger createdAt
-    const msUntilNextSecond = 1000 - (Date.now() % 1000);
-    await new Promise((r) => setTimeout(r, msUntilNextSecond + 10));
+    await new Promise<void>((r) =>
+      setTimeout(r, 1000 - (Date.now() % 1000) + 10),
+    );
     await authedFetch("/api/v1/todos", {
       method: "POST",
       body: JSON.stringify({ title: "Second" }),
