@@ -1,7 +1,7 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, pgTable, text } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
-export const todos = sqliteTable("todo", {
+export const todos = pgTable("todo", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
