@@ -1,56 +1,74 @@
-import { env, SELF } from "cloudflare:test";
-import { drizzle } from "drizzle-orm/d1";
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { account, session, user, verification } from "../src/db/schema/auth";
 import { todos } from "../src/db/schema/todos";
-import { applyMigrations } from "./apply-migrations";
+import app from "../src/index";
+import type { Env } from "../src/types";
 
-const BASE = "http://localhost";
+const testEnv: Env = {
+  DATABASE_URL: process.env.DATABASE_URL as string,
+  BETTER_AUTH_SECRET: "test-secret-for-testing-only",
+  RESEND_API_KEY: "test",
+  APP_URL: "http://localhost",
+  SKIP_EMAIL_VERIFICATION: "true",
+};
+
+const sql = postgres(testEnv.DATABASE_URL);
+const db = drizzle(sql);
 
 let authToken: string;
 
 async function authedFetch(path: string, init?: RequestInit) {
-  return SELF.fetch(`${BASE}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-      ...(init?.headers as Record<string, string>),
+  return app.request(
+    path,
+    {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+        ...(init?.headers as Record<string, string>),
+      },
     },
-  });
+    testEnv,
+  );
 }
 
 beforeAll(async () => {
-  const db = drizzle(env.DB);
-  await applyMigrations();
-
   await db.delete(todos);
   await db.delete(verification);
   await db.delete(session);
   await db.delete(account);
   await db.delete(user);
 
-  const res = await SELF.fetch(`${BASE}/api/auth/sign-up/email`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: "todo@example.com",
-      password: "password123",
-      name: "Todo User",
-    }),
-  });
+  const res = await app.request(
+    "/api/auth/sign-up/email",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "todo@example.com",
+        password: "password123",
+        name: "Todo User",
+      }),
+    },
+    testEnv,
+  );
   const body = await res.json<{ token: string }>();
   authToken = body.token;
 });
 
 beforeEach(async () => {
-  const db = drizzle(env.DB);
   await db.delete(todos);
+});
+
+afterAll(async () => {
+  await sql.end();
 });
 
 describe("GET /api/v1/todos", () => {
   it("returns 401 without auth", async () => {
-    const res = await SELF.fetch(`${BASE}/api/v1/todos`);
+    const res = await app.request("/api/v1/todos", {}, testEnv);
     expect(res.status).toBe(401);
   });
 
@@ -67,6 +85,9 @@ describe("GET /api/v1/todos", () => {
       method: "POST",
       body: JSON.stringify({ title: "First" }),
     });
+    // Wait until the next Unix second so "Second" gets a strictly larger createdAt
+    const msUntilNextSecond = 1000 - (Date.now() % 1000);
+    await new Promise((r) => setTimeout(r, msUntilNextSecond + 10));
     await authedFetch("/api/v1/todos", {
       method: "POST",
       body: JSON.stringify({ title: "Second" }),
@@ -105,11 +126,15 @@ describe("GET /api/v1/todos", () => {
 
 describe("POST /api/v1/todos", () => {
   it("returns 401 without auth", async () => {
-    const res = await SELF.fetch(`${BASE}/api/v1/todos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: "Test" }),
-    });
+    const res = await app.request(
+      "/api/v1/todos",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "Test" }),
+      },
+      testEnv,
+    );
     expect(res.status).toBe(401);
   });
 
@@ -144,7 +169,7 @@ describe("POST /api/v1/todos", () => {
 
 describe("GET /api/v1/todos/:todoId", () => {
   it("returns 401 without auth", async () => {
-    const res = await SELF.fetch(`${BASE}/api/v1/todos/some-id`);
+    const res = await app.request("/api/v1/todos/some-id", {}, testEnv);
     expect(res.status).toBe(401);
   });
 
@@ -167,30 +192,35 @@ describe("GET /api/v1/todos/:todoId", () => {
   });
 
   it("returns 403 when accessing another user's todo", async () => {
-    // Create a second user
-    const res2 = await SELF.fetch(`${BASE}/api/auth/sign-up/email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: "other@example.com",
-        password: "password123",
-        name: "Other",
-      }),
-    });
+    const res2 = await app.request(
+      "/api/auth/sign-up/email",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: "other@example.com",
+          password: "password123",
+          name: "Other",
+        }),
+      },
+      testEnv,
+    );
     const { token: token2 } = await res2.json<{ token: string }>();
 
-    // Create a todo as user2
-    const createRes = await SELF.fetch(`${BASE}/api/v1/todos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token2}`,
+    const createRes = await app.request(
+      "/api/v1/todos",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token2}`,
+        },
+        body: JSON.stringify({ title: "User2 Todo" }),
       },
-      body: JSON.stringify({ title: "User2 Todo" }),
-    });
+      testEnv,
+    );
     const { id } = await createRes.json<{ id: string }>();
 
-    // Try to access as user1
     const res = await authedFetch(`/api/v1/todos/${id}`);
     expect(res.status).toBe(403);
   });
@@ -198,16 +228,20 @@ describe("GET /api/v1/todos/:todoId", () => {
 
 describe("PUT /api/v1/todos/:todoId", () => {
   it("returns 401 without auth", async () => {
-    const res = await SELF.fetch(`${BASE}/api/v1/todos/some-id`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: "x",
-        description: null,
-        status: "todo",
-        dueDate: null,
-      }),
-    });
+    const res = await app.request(
+      "/api/v1/todos/some-id",
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: "x",
+          description: null,
+          status: "todo",
+          dueDate: null,
+        }),
+      },
+      testEnv,
+    );
     expect(res.status).toBe(401);
   });
 
@@ -255,9 +289,11 @@ describe("PUT /api/v1/todos/:todoId", () => {
 
 describe("DELETE /api/v1/todos/:todoId", () => {
   it("returns 401 without auth", async () => {
-    const res = await SELF.fetch(`${BASE}/api/v1/todos/some-id`, {
-      method: "DELETE",
-    });
+    const res = await app.request(
+      "/api/v1/todos/some-id",
+      { method: "DELETE" },
+      testEnv,
+    );
     expect(res.status).toBe(401);
   });
 
@@ -276,25 +312,33 @@ describe("DELETE /api/v1/todos/:todoId", () => {
   });
 
   it("returns 403 when deleting another user's todo", async () => {
-    const res2 = await SELF.fetch(`${BASE}/api/auth/sign-up/email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: "del-other@example.com",
-        password: "password123",
-        name: "Other",
-      }),
-    });
+    const res2 = await app.request(
+      "/api/auth/sign-up/email",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: "del-other@example.com",
+          password: "password123",
+          name: "Other",
+        }),
+      },
+      testEnv,
+    );
     const { token: token2 } = await res2.json<{ token: string }>();
 
-    const createRes = await SELF.fetch(`${BASE}/api/v1/todos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token2}`,
+    const createRes = await app.request(
+      "/api/v1/todos",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token2}`,
+        },
+        body: JSON.stringify({ title: "Other's Todo" }),
       },
-      body: JSON.stringify({ title: "Other's Todo" }),
-    });
+      testEnv,
+    );
     const { id } = await createRes.json<{ id: string }>();
 
     const res = await authedFetch(`/api/v1/todos/${id}`, { method: "DELETE" });
