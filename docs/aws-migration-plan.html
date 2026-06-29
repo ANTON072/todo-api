@@ -429,8 +429,9 @@
     <div class="phase-number">Phase 1</div>
     <div class="phase-title">ローカルPostgreSQL</div>
     <ul class="phase-items">
-      <li>Docker で PostgreSQL 16 を起動</li>
-      <li>開発・テスト用DBとして利用</li>
+      <li><code>docker-compose.yml</code> で PostgreSQL 16 を定義（再現性確保）</li>
+      <li><code>docker compose up -d</code> 一発で起動</li>
+      <li><code>.env.example</code> をコピーして <code>.env</code> を作成</li>
       <li>AWSにデプロイする前に全テストをここで通す</li>
     </ul>
   </div>
@@ -580,6 +581,138 @@
     <span class="pkg-tag remove">@cloudflare/workers-types</span>
     <span class="pkg-tag remove">wrangler</span>
   </div>
+</div>
+
+<hr class="divider">
+
+<!-- HUMAN TASKS -->
+<div class="section-title" style="--accent:#f59e0b;">あなたがやること（手動タスク）</div>
+
+<style>
+  .human-tasks { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .htask {
+    background: #1e2433;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    align-items: center;
+    gap: 16px;
+  }
+  .htask-when {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+  }
+  .htask-when.now    { color: #f43f5e; }
+  .htask-when.pre1   { color: #f59e0b; }
+  .htask-when.pre6   { color: #3b82f6; }
+  .htask-when.at6    { color: #8b5cf6; }
+  .htask-when.at7    { color: #10b981; }
+  .htask-title { font-size: 13px; font-weight: 600; color: #f1f5f9; }
+  .htask-desc  { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+  .htask-tag {
+    font-size: 10px;
+    border-radius: 4px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .htask-tag.now  { background:#450a0a; color:#fca5a5; border:1px solid #dc262655; }
+  .htask-tag.soon { background:#422006; color:#fcd34d; border:1px solid #d9770655; }
+  .htask-tag.later{ background:#1e1b4b; color:#a5b4fc; border:1px solid #4f46e555; }
+  .htask-tag.deploy{ background:#14532d; color:#86efac; border:1px solid #16a34a55; }
+  .htask-tag.done { background:#1e293b; color:#64748b; border:1px solid #33415555; }
+</style>
+
+<div class="human-tasks">
+
+  <div class="htask">
+    <div class="htask-when now">🔴 今すぐ</div>
+    <div>
+      <div class="htask-title">AWSアカウントを作成する <span style="font-size:11px;color:#f43f5e;">🌐 ブラウザ必須</span></div>
+      <div class="htask-desc">aws.amazon.com でサインアップ。クレジットカード登録が必要。無料枠は登録日から12ヶ月。</div>
+    </div>
+    <span class="htask-tag now">最優先</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when now">🔴 今すぐ</div>
+    <div>
+      <div class="htask-title">rootアカウントにMFAを設定する <span style="font-size:11px;color:#f43f5e;">🌐 ブラウザ必須</span></div>
+      <div class="htask-desc">AWSのベストプラクティス。rootのMFAはコンソールからのみ設定可能。Google Authenticatorなどで設定。</div>
+    </div>
+    <span class="htask-tag now">セキュリティ</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when now">🔴 今すぐ</div>
+    <div>
+      <div class="htask-title">IAM Identity CenterでUserを作成する <span style="font-size:11px;color:#f43f5e;">🌐 ブラウザ必須</span></div>
+      <div class="htask-desc">rootのアクセスキーは作らないのがベストプラクティス。コンソールでIAM Identity Center → ユーザーを作成し、Permission Set（AdministratorAccess）をアタッチする。静的なアクセスキーは不要。</div>
+    </div>
+    <span class="htask-tag done">完了</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when now">🔴 今すぐ</div>
+    <div>
+      <div class="htask-title">AWS CLIをSSO named profileで設定する <span style="font-size:11px;color:#4ade80;">💻 CLI</span></div>
+      <div class="htask-desc">
+        <code>aws configure sso --profile ougi-aws</code> を実行。SSO Start URL（IAM Identity Center → 設定 → アクセスポータルURL）・リージョン（us-east-1）を入力するとブラウザが開くのでログインして Allow。以降は <code>AWS_PROFILE=ougi-aws aws ...</code> で実行。セッション切れ時は <code>aws sso login --profile ougi-aws</code> で再ログイン。
+      </div>
+    </div>
+    <span class="htask-tag now">最優先</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when pre1">🟡 Phase 1前</div>
+    <div>
+      <div class="htask-title">Dockerをインストールする <span style="font-size:11px;color:#4ade80;">💻 CLI</span></div>
+      <div class="htask-desc">ローカルのPostgreSQL用。<code>brew install --cask docker</code> または Docker公式サイトからインストール。インストール後は <code>docker compose up -d</code> でDBを起動（<code>docker-compose.yml</code> がリポジトリに含まれているため追加設定不要）。</div>
+    </div>
+    <span class="htask-tag soon">開発準備</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when pre6">🔵 Phase 6前</div>
+    <div>
+      <div class="htask-title">AWS CDK CLIをインストールする <span style="font-size:11px;color:#4ade80;">💻 CLI</span></div>
+      <div class="htask-desc"><code>npm install -g aws-cdk</code> でグローバルインストール。</div>
+    </div>
+    <span class="htask-tag later">インフラ準備</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when pre6">🔵 Phase 6前</div>
+    <div>
+      <div class="htask-title">CDK Bootstrapを実行する（1回だけ） <span style="font-size:11px;color:#4ade80;">💻 CLI</span></div>
+      <div class="htask-desc"><code>cdk bootstrap aws://アカウントID/us-east-1</code> でAWSアカウントにCDK用リソースを初期設定。</div>
+    </div>
+    <span class="htask-tag later">インフラ準備</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when at6">🟣 Phase 6時</div>
+    <div>
+      <div class="htask-title">Secrets Managerに秘密情報を登録する <span style="font-size:11px;color:#4ade80;">💻 CLI</span></div>
+      <div class="htask-desc"><code>aws secretsmanager create-secret</code> で <code>BETTER_AUTH_SECRET</code>、<code>RESEND_API_KEY</code> を登録。RDSのパスワードはCDKが自動生成。</div>
+    </div>
+    <span class="htask-tag deploy">デプロイ時</span>
+  </div>
+
+  <div class="htask">
+    <div class="htask-when at7">🟢 Phase 7時</div>
+    <div>
+      <div class="htask-title">本番エンドポイントで動作確認する <span style="font-size:11px;color:#4ade80;">💻 CLI / ブラウザ</span></div>
+      <div class="htask-desc">API GatewayのURLでSwagger UIを開き、サインアップ→ログイン→TODO CRUDを手動で通し確認。</div>
+    </div>
+    <span class="htask-tag deploy">最終確認</span>
+  </div>
+
 </div>
 
 <hr class="divider">
