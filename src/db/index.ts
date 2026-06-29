@@ -1,6 +1,13 @@
-import { drizzle } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import type { Env } from "../types";
 
+// Singleton client: reused across Lambda invocations within the same container
+let client: ReturnType<typeof postgres> | undefined;
+
 export function createDb(env: Env) {
-  return drizzle(env.DB);
+  if (!client) {
+    client = postgres(env.DATABASE_URL);
+  }
+  return drizzle(client);
 }

@@ -1,13 +1,14 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { bearer } from "better-auth/plugins";
-import { drizzle } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { Resend } from "resend";
 import * as authSchema from "../db/schema/auth";
 import type { Env } from "../types";
 
 export function createAuth(env: Env) {
-  const db = drizzle(env.DB);
+  const db = drizzle(postgres(env.DATABASE_URL));
   const skipVerification = env.SKIP_EMAIL_VERIFICATION === "true";
 
   return betterAuth({
@@ -15,7 +16,7 @@ export function createAuth(env: Env) {
     baseURL: env.APP_URL,
     basePath: "/api/auth",
     database: drizzleAdapter(db, {
-      provider: "sqlite",
+      provider: "pg",
       schema: {
         user: authSchema.user,
         session: authSchema.session,

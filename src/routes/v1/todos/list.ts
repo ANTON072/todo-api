@@ -1,5 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { and, count, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { createDb } from "../../../db/index";
 import { todos } from "../../../db/schema/todos";
 import { createHono } from "../../../lib/hono";
@@ -63,7 +63,7 @@ app.openapi(route, async (c) => {
     .select()
     .from(todos)
     .where(where)
-    .orderBy(desc(todos.createdAt), desc(sql<number>`rowid`))
+    .orderBy(desc(todos.createdAt), desc(todos.id))
     .limit(limit)
     .offset((page - 1) * limit);
 

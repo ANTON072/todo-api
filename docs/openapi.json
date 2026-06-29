@@ -17,9 +17,7 @@
   "paths": {
     "/api/auth/sign-up/email": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "requestBody": {
           "required": true,
           "content": {
@@ -40,11 +38,7 @@
                     "minLength": 1
                   }
                 },
-                "required": [
-                  "email",
-                  "password",
-                  "name"
-                ]
+                "required": ["email", "password", "name"]
               }
             }
           }
@@ -73,17 +67,10 @@
                           "type": "string"
                         }
                       },
-                      "required": [
-                        "id",
-                        "email",
-                        "name"
-                      ]
+                      "required": ["id", "email", "name"]
                     }
                   },
-                  "required": [
-                    "token",
-                    "user"
-                  ]
+                  "required": ["token", "user"]
                 }
               }
             }
@@ -93,9 +80,7 @@
     },
     "/api/auth/sign-in/email": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "requestBody": {
           "required": true,
           "content": {
@@ -111,10 +96,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -143,17 +125,10 @@
                           "type": "string"
                         }
                       },
-                      "required": [
-                        "id",
-                        "email",
-                        "name"
-                      ]
+                      "required": ["id", "email", "name"]
                     }
                   },
-                  "required": [
-                    "token",
-                    "user"
-                  ]
+                  "required": ["token", "user"]
                 }
               }
             }
@@ -171,9 +146,7 @@
             "bearerAuth": []
           }
         ],
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "parameters": [
           {
             "schema": {
@@ -201,11 +174,7 @@
           {
             "schema": {
               "type": "string",
-              "enum": [
-                "todo",
-                "in_progress",
-                "done"
-              ]
+              "enum": ["todo", "in_progress", "done"]
             },
             "required": false,
             "name": "status",
@@ -240,11 +209,7 @@
                           },
                           "status": {
                             "type": "string",
-                            "enum": [
-                              "todo",
-                              "in_progress",
-                              "done"
-                            ]
+                            "enum": ["todo", "in_progress", "done"]
                           },
                           "dueDate": {
                             "type": "number",
@@ -282,13 +247,7 @@
                       "type": "number"
                     }
                   },
-                  "required": [
-                    "todos",
-                    "total",
-                    "page",
-                    "limit",
-                    "totalPages"
-                  ]
+                  "required": ["todos", "total", "page", "limit", "totalPages"]
                 }
               }
             }
@@ -301,9 +260,7 @@
             "bearerAuth": []
           }
         ],
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "requestBody": {
           "required": true,
           "content": {
@@ -320,19 +277,13 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "todo",
-                      "in_progress",
-                      "done"
-                    ]
+                    "enum": ["todo", "in_progress", "done"]
                   },
                   "dueDate": {
                     "type": "integer"
                   }
                 },
-                "required": [
-                  "title"
-                ]
+                "required": ["title"]
               }
             }
           }
@@ -360,11 +311,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "enum": [
-                        "todo",
-                        "in_progress",
-                        "done"
-                      ]
+                      "enum": ["todo", "in_progress", "done"]
                     },
                     "dueDate": {
                       "type": "number",
@@ -401,9 +348,7 @@
             "bearerAuth": []
           }
         ],
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "parameters": [
           {
             "schema": {
@@ -437,11 +382,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "enum": [
-                        "todo",
-                        "in_progress",
-                        "done"
-                      ]
+                      "enum": ["todo", "in_progress", "done"]
                     },
                     "dueDate": {
                       "type": "number",
@@ -476,9 +417,7 @@
             "bearerAuth": []
           }
         ],
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "parameters": [
           {
             "schema": {
@@ -506,23 +445,14 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "todo",
-                      "in_progress",
-                      "done"
-                    ]
+                    "enum": ["todo", "in_progress", "done"]
                   },
                   "dueDate": {
                     "type": "integer",
                     "nullable": true
                   }
                 },
-                "required": [
-                  "title",
-                  "description",
-                  "status",
-                  "dueDate"
-                ]
+                "required": ["title", "description", "status", "dueDate"]
               }
             }
           }
@@ -550,11 +480,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "enum": [
-                        "todo",
-                        "in_progress",
-                        "done"
-                      ]
+                      "enum": ["todo", "in_progress", "done"]
                     },
                     "dueDate": {
                       "type": "number",
@@ -589,9 +515,7 @@
             "bearerAuth": []
           }
         ],
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "parameters": [
           {
             "schema": {
