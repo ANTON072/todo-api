@@ -344,7 +344,7 @@
 <body>
 
 <h1>🚀 AWS移行プラン</h1>
-<p class="subtitle">Cloudflare Workers + D1 → AWS Lambda + Aurora Serverless v2</p>
+<p class="subtitle">Cloudflare Workers + D1 → AWS Lambda + RDS PostgreSQL (us-east-1)</p>
 
 <!-- ARCHITECTURE -->
 <div class="arch-section">
@@ -405,7 +405,7 @@
     <div class="arrow-down">↓</div>
     <div class="service-box">
       <span class="icon">🐘</span>
-      <div><div class="name">Aurora Serverless v2</div><div class="desc">PostgreSQL 16 / VPC内プライベート</div></div>
+      <div><div class="name">RDS PostgreSQL db.t3.micro</div><div class="desc">us-east-1 / VPC内パブリックサブネット / 12ヶ月無料枠</div></div>
     </div>
     <div class="arrow-down">↓</div>
     <div class="service-box">
@@ -454,7 +454,8 @@
       <li><code>types.ts</code>: D1Database → DATABASE_URL</li>
       <li><code>db/index.ts</code>: postgres-js アダプタ</li>
       <li><code>lib/auth.ts</code>: provider pg に変更</li>
-      <li><code>lambda.ts</code>: 新規エントリポイント</li>
+      <li><code>lambda.ts</code>: 本番用エントリポイント</li>
+      <li><code>server.ts</code>: ローカル開発用エントリポイント（Hono推奨）</li>
     </ul>
   </div>
 
@@ -487,8 +488,9 @@
     <div class="phase-number">Phase 6</div>
     <div class="phase-title">AWSインフラ (CDK)</div>
     <ul class="phase-items">
-      <li>VPC + プライベートサブネット</li>
-      <li>Aurora Serverless v2</li>
+      <li>VPC + パブリックサブネット（NATなし）</li>
+      <li>RDS PostgreSQL db.t3.micro（us-east-1）</li>
+      <li>セキュリティグループでLambdaからのみ許可 + SSL強制</li>
       <li>Lambda (512MB / 30s timeout)</li>
       <li>API Gateway HTTP API</li>
       <li>Secrets Manager</li>
@@ -566,9 +568,11 @@
     <div class="pkg-label add">➕ 追加するパッケージ</div>
     <span class="pkg-tag add">postgres</span>
     <span class="pkg-tag add">@hono/aws-lambda</span>
+    <span class="pkg-tag add">@hono/node-server</span>
     <span class="pkg-tag add" style="opacity:.7">[dev] aws-cdk-lib</span>
     <span class="pkg-tag add" style="opacity:.7">[dev] constructs</span>
     <span class="pkg-tag add" style="opacity:.7">[dev] esbuild</span>
+    <span class="pkg-tag add" style="opacity:.7">[dev] tsx</span>
   </div>
   <div class="pkg-card remove">
     <div class="pkg-label remove">➖ 削除するパッケージ</div>
@@ -589,8 +593,8 @@
     <div class="risk-desc">Lambda高同時実行時にPostgreSQLの接続数が枯渇する可能性。低トラフィック時は問題なし。必要になれば RDS Proxy を追加。</div>
   </div>
   <div class="risk-card">
-    <div class="risk-title">⚠️ コールドスタート</div>
-    <div class="risk-desc">VPC内Lambdaは2020年以降1秒未満。Aurora Serverless v2の最小0.5 ACUに設定すれば完全ゼロスケールを回避できる。</div>
+    <div class="risk-title">⚠️ パブリックサブネット構成</div>
+    <div class="risk-desc">パブリックサブネット構成のためNATゲートウェイ不要（月$32節約）。セキュリティグループでLambdaからの接続のみ許可し、SSL接続を強制することで個人プロジェクトとして十分なセキュリティを確保。</div>
   </div>
   <div class="risk-card">
     <div class="risk-title">⚠️ 2038年問題</div>
