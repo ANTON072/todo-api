@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 32px;
+  }
+
+  /* ─── Architecture Section ─── */
+  .arch-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+  .arch-col {
+    flex: 1;
+    background: #1e2433;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .arch-col.cloudflare { border-color: #f6821f44; }
+  .arch-col.aws        { border-color: #ff990044; }
+
+  .arch-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .cloudflare .arch-label { color: #f6821f; }
+  .aws .arch-label        { color: #ff9900; }
+
+  .service-box {
+    background: #262d3d;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #374151;
+    font-size: 13px;
+  }
+  .service-box .icon { font-size: 18px; flex-shrink: 0; }
+  .service-box .name { font-weight: 600; color: #f1f5f9; }
+  .service-box .desc { font-size: 11px; color: #94a3b8; }
+
+  .arrow-down {
+    text-align: center;
+    color: #475569;
+    font-size: 18px;
+    margin: 4px 0;
+  }
+
+  .arch-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    color: #475569;
+    font-size: 11px;
+    padding-top: 60px;
+    width: 60px;
+    flex-shrink: 0;
+  }
+  .arch-arrow .big-arrow { font-size: 28px; color: #22c55e; }
+  .arch-arrow .label { color: #4ade80; font-weight: 600; font-size: 10px; text-align: center; }
+
+  /* unchanged badge */
+  .badge-unchanged {
+    background: #1a3a2a;
+    color: #4ade80;
+    border: 1px solid #16a34a44;
+    border-radius: 4px;
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .badge-change {
+    background: #3a1a1a;
+    color: #f87171;
+    border: 1px solid #dc262644;
+    border-radius: 4px;
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* ─── Phases ─── */
+  .phases-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phases-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: #3b82f6;
+    border-radius: 2px;
+  }
+
+  .phases-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .phase-card {
+    background: #1e2433;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+    transition: transform 0.15s, border-color 0.15s;
+    cursor: default;
+  }
+  .phase-card:hover {
+    transform: translateY(-2px);
+    border-color: #3b82f6;
+  }
+
+  .phase-number {
+    font-size: 11px;
+    font-weight: 700;
+    color: #3b82f6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .phase-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .phase-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .phase-items li {
+    font-size: 11.5px;
+    color: #94a3b8;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+  }
+  .phase-items li::before {
+    content: '›';
+    color: #475569;
+    flex-shrink: 0;
+    margin-top: 0px;
+  }
+
+  .phase-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  /* color variants */
+  .phase-card.p1 { border-top: 3px solid #06b6d4; }
+  .phase-card.p2 { border-top: 3px solid #8b5cf6; }
+  .phase-card.p3 { border-top: 3px solid #f59e0b; }
+  .phase-card.p4 { border-top: 3px solid #10b981; }
+  .phase-card.p5 { border-top: 3px solid #f43f5e; }
+  .phase-card.p6 { border-top: 3px solid #3b82f6; }
+  .phase-card.p7 { border-top: 3px solid #a855f7; }
+
+  .phase-card.p1 .phase-number { color: #06b6d4; }
+  .phase-card.p2 .phase-number { color: #8b5cf6; }
+  .phase-card.p3 .phase-number { color: #f59e0b; }
+  .phase-card.p4 .phase-number { color: #10b981; }
+  .phase-card.p5 .phase-number { color: #f43f5e; }
+  .phase-card.p6 .phase-number { color: #3b82f6; }
+  .phase-card.p7 .phase-number { color: #a855f7; }
+
+  /* ─── Type mapping table ─── */
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: #a855f7;
+    border-radius: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-bottom: 32px;
+    background: #1e2433;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #2d3748;
+  }
+  thead th {
+    background: #262d3d;
+    color: #94a3b8;
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid #2d3748;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  tbody tr:not(:last-child) td {
+    border-bottom: 1px solid #1a2030;
+  }
+  tbody td {
+    padding: 10px 14px;
+    color: #cbd5e1;
+    vertical-align: top;
+  }
+  tbody tr:hover td { background: #262d3d; }
+  code {
+    background: #0f1117;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    color: #93c5fd;
+  }
+
+  /* ─── Risks ─── */
+  .risks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .risk-card {
+    background: #1e2433;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .risk-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fbbf24;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .risk-desc {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  /* ─── Packages ─── */
+  .pkg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .pkg-card {
+    background: #1e2433;
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid #2d3748;
+  }
+  .pkg-card.add { border-color: #16a34a44; }
+  .pkg-card.remove { border-color: #dc262644; }
+  .pkg-label {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pkg-label.add { color: #4ade80; }
+  .pkg-label.remove { color: #f87171; }
+  .pkg-tag {
+    display: inline-block;
+    border-radius: 5px;
+    padding: 3px 9px;
+    font-size: 11.5px;
+    margin: 3px 3px 3px 0;
+    font-family: monospace;
+  }
+  .pkg-tag.add    { background: #14532d; color: #86efac; border: 1px solid #16a34a55; }
+  .pkg-tag.remove { background: #450a0a; color: #fca5a5; border: 1px solid #dc262655; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #1e2433;
+    margin: 28px 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>🚀 AWS移行プラン</h1>
+<p class="subtitle">Cloudflare Workers + D1 → AWS Lambda + Aurora Serverless v2</p>
+
+<!-- ARCHITECTURE -->
+<div class="arch-section">
+
+  <!-- Cloudflare -->
+  <div class="arch-col cloudflare">
+    <div class="arch-label">☁ 現在: Cloudflare</div>
+
+    <div class="service-box">
+      <span class="icon">🌐</span>
+      <div><div class="name">HTTP Request</div><div class="desc">クライアントからのリクエスト</div></div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="service-box">
+      <span class="icon">⚡</span>
+      <div><div class="name">Cloudflare Workers</div><div class="desc">Hono フレームワーク</div></div>
+      <span class="badge-unchanged">変更なし</span>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="service-box">
+      <span class="icon">🗄️</span>
+      <div><div class="name">D1 (SQLite)</div><div class="desc">env.DB バインディング</div></div>
+      <span class="badge-change">要変更</span>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="service-box">
+      <span class="icon">📧</span>
+      <div><div class="name">Resend API</div><div class="desc">メール送信</div></div>
+      <span class="badge-unchanged">変更なし</span>
+    </div>
+  </div>
+
+  <!-- Arrow -->
+  <div class="arch-arrow">
+    <div class="big-arrow">→</div>
+    <div class="label">移行</div>
+  </div>
+
+  <!-- AWS -->
+  <div class="arch-col aws">
+    <div class="arch-label">☁ 移行後: AWS</div>
+
+    <div class="service-box">
+      <span class="icon">🌐</span>
+      <div><div class="name">HTTP Request</div><div class="desc">クライアントからのリクエスト</div></div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="service-box">
+      <span class="icon">🔀</span>
+      <div><div class="name">API Gateway HTTP API</div><div class="desc">HTTPルーティング・スロットリング</div></div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="service-box">
+      <span class="icon">λ</span>
+      <div><div class="name">Lambda (Node.js 22)</div><div class="desc">Hono アプリ + @hono/aws-lambda</div></div>
+      <span class="badge-unchanged">Honoそのまま</span>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="service-box">
+      <span class="icon">🐘</span>
+      <div><div class="name">Aurora Serverless v2</div><div class="desc">PostgreSQL 16 / VPC内プライベート</div></div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="service-box">
+      <span class="icon">📧</span>
+      <div><div class="name">Resend API</div><div class="desc">メール送信</div></div>
+      <span class="badge-unchanged">変更なし</span>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<!-- PHASES -->
+<div class="phases-title">実装フェーズ（7ステップ）</div>
+
+<div class="phases-grid" style="grid-template-columns: repeat(4,1fr);">
+
+  <div class="phase-card p1">
+    <div class="phase-icon">🐳</div>
+    <div class="phase-number">Phase 1</div>
+    <div class="phase-title">ローカルPostgreSQL</div>
+    <ul class="phase-items">
+      <li>Docker で PostgreSQL 16 を起動</li>
+      <li>開発・テスト用DBとして利用</li>
+      <li>AWSにデプロイする前に全テストをここで通す</li>
+    </ul>
+  </div>
+
+  <div class="phase-card p2">
+    <div class="phase-icon">📐</div>
+    <div class="phase-number">Phase 2</div>
+    <div class="phase-title">DBスキーマ変換</div>
+    <ul class="phase-items">
+      <li><code>sqlite-core</code> → <code>pg-core</code></li>
+      <li>boolean / timestamp 型に変更</li>
+      <li>todo の Unix秒カラムはそのまま</li>
+    </ul>
+  </div>
+
+  <div class="phase-card p3">
+    <div class="phase-icon">⚙️</div>
+    <div class="phase-number">Phase 3</div>
+    <div class="phase-title">アプリコード変更</div>
+    <ul class="phase-items">
+      <li><code>types.ts</code>: D1Database → DATABASE_URL</li>
+      <li><code>db/index.ts</code>: postgres-js アダプタ</li>
+      <li><code>lib/auth.ts</code>: provider pg に変更</li>
+      <li><code>lambda.ts</code>: 新規エントリポイント</li>
+    </ul>
+  </div>
+
+  <div class="phase-card p4">
+    <div class="phase-icon">🗃️</div>
+    <div class="phase-number">Phase 4</div>
+    <div class="phase-title">マイグレーション再生成</div>
+    <ul class="phase-items">
+      <li><code>drizzle.config.ts</code> を postgresql に</li>
+      <li>旧SQLiteマイグレーションを削除</li>
+      <li><code>drizzle-kit generate</code> で再生成</li>
+      <li>ローカルDBに apply</li>
+    </ul>
+  </div>
+
+  <div class="phase-card p5">
+    <div class="phase-icon">🧪</div>
+    <div class="phase-number">Phase 5</div>
+    <div class="phase-title">テスト書き換え</div>
+    <ul class="phase-items">
+      <li>Cloudflare Workers pool を除去</li>
+      <li><code>cloudflare:test</code> のimportを削除</li>
+      <li><code>SELF.fetch</code> → <code>app.request</code></li>
+      <li>標準Vitest + Node.js環境</li>
+    </ul>
+  </div>
+
+  <div class="phase-card p6">
+    <div class="phase-icon">🏗️</div>
+    <div class="phase-number">Phase 6</div>
+    <div class="phase-title">AWSインフラ (CDK)</div>
+    <ul class="phase-items">
+      <li>VPC + プライベートサブネット</li>
+      <li>Aurora Serverless v2</li>
+      <li>Lambda (512MB / 30s timeout)</li>
+      <li>API Gateway HTTP API</li>
+      <li>Secrets Manager</li>
+    </ul>
+  </div>
+
+  <div class="phase-card p7">
+    <div class="phase-icon">🚀</div>
+    <div class="phase-number">Phase 7</div>
+    <div class="phase-title">デプロイ・検証</div>
+    <ul class="phase-items">
+      <li>RDSにマイグレーション適用</li>
+      <li>Swagger UI で疎通確認</li>
+      <li>サインアップ→ログイン→CRUD 通し確認</li>
+    </ul>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<!-- TYPE MAPPING TABLE -->
+<div class="section-title">SQLite → PostgreSQL 型マッピング（最重要）</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>カラム</th>
+      <th>SQLite (D1) 現在</th>
+      <th>PostgreSQL 変更後</th>
+      <th>ファイル</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>emailVerified</code></td>
+      <td><code>integer({ mode: "boolean" })</code> — 0/1で保存</td>
+      <td><code>boolean()</code></td>
+      <td>auth.ts</td>
+    </tr>
+    <tr>
+      <td><code>createdAt</code>, <code>updatedAt</code>, <code>expiresAt</code></td>
+      <td><code>integer({ mode: "timestamp" })</code> — Unix秒</td>
+      <td><code>timestamp()</code></td>
+      <td>auth.ts</td>
+    </tr>
+    <tr>
+      <td><code>accessTokenExpiresAt</code>, <code>refreshTokenExpiresAt</code></td>
+      <td><code>integer({ mode: "timestamp" })</code> nullable</td>
+      <td><code>timestamp()</code> nullable</td>
+      <td>auth.ts</td>
+    </tr>
+    <tr>
+      <td><code>dueDate</code>, <code>created_at</code>, <code>updated_at</code> (todo)</td>
+      <td><code>integer()</code> — Unix秒</td>
+      <td><code>integer()</code> そのまま ✅</td>
+      <td>todos.ts</td>
+    </tr>
+    <tr>
+      <td><code>sqliteTable</code> / <code>pgTable</code></td>
+      <td><code>import ... from "drizzle-orm/sqlite-core"</code></td>
+      <td><code>import ... from "drizzle-orm/pg-core"</code></td>
+      <td>両方</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr class="divider">
+
+<!-- PACKAGES -->
+<div class="section-title">パッケージ変更</div>
+
+<div class="pkg-grid">
+  <div class="pkg-card add">
+    <div class="pkg-label add">➕ 追加するパッケージ</div>
+    <span class="pkg-tag add">postgres</span>
+    <span class="pkg-tag add">@hono/aws-lambda</span>
+    <span class="pkg-tag add" style="opacity:.7">[dev] aws-cdk-lib</span>
+    <span class="pkg-tag add" style="opacity:.7">[dev] constructs</span>
+    <span class="pkg-tag add" style="opacity:.7">[dev] esbuild</span>
+  </div>
+  <div class="pkg-card remove">
+    <div class="pkg-label remove">➖ 削除するパッケージ</div>
+    <span class="pkg-tag remove">@cloudflare/vitest-pool-workers</span>
+    <span class="pkg-tag remove">@cloudflare/workers-types</span>
+    <span class="pkg-tag remove">wrangler</span>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- RISKS -->
+<div class="section-title">リスク・注意点</div>
+
+<div class="risks-grid">
+  <div class="risk-card">
+    <div class="risk-title">⚠️ コネクション上限</div>
+    <div class="risk-desc">Lambda高同時実行時にPostgreSQLの接続数が枯渇する可能性。低トラフィック時は問題なし。必要になれば RDS Proxy を追加。</div>
+  </div>
+  <div class="risk-card">
+    <div class="risk-title">⚠️ コールドスタート</div>
+    <div class="risk-desc">VPC内Lambdaは2020年以降1秒未満。Aurora Serverless v2の最小0.5 ACUに設定すれば完全ゼロスケールを回避できる。</div>
+  </div>
+  <div class="risk-card">
+    <div class="risk-title">⚠️ 2038年問題</div>
+    <div class="risk-desc">PostgreSQLのintegerは最大約21億 ≒ 2038年1月まで。長期運用するなら dueDate を bigint に変更することを検討。</div>
+  </div>
+</div>
+
+</body>
+</html>
