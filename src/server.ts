@@ -11,7 +11,12 @@ const env: Env = {
   SKIP_EMAIL_VERIFICATION: process.env.SKIP_EMAIL_VERIFICATION,
 };
 
-serve({
-  fetch: (req) => app.fetch(req, env),
-  port: Number(process.env.PORT ?? 3000),
-});
+serve(
+  {
+    fetch: (req) => app.fetch(req, env),
+    port: Number(process.env.PORT ?? 3000),
+  },
+  (info) => {
+    console.log(`Listening on http://localhost:${info.port}`);
+  },
+);

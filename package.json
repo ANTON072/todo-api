@@ -2,6 +2,7 @@
   "name": "todo-api",
   "private": true,
   "scripts": {
+    "dev": "node --env-file=.env --watch --import tsx src/server.ts",
     "test": "vitest run",
     "check": "biome check --write",
     "typecheck": "tsc --noEmit",
