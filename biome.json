@@ -12,7 +12,8 @@
       "!node_modules",
       "!dist",
       "!build",
-      "!worker-configuration.d.ts"
+      "!worker-configuration.d.ts",
+      "!docs"
     ]
   },
   "formatter": {
