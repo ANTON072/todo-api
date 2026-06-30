@@ -1,0 +1,36 @@
+{
+  "version": "54.0.0",
+  "files": {
+    "2f6bdd6f77fb561536225e9a7db2ec804607ee02b73034f3bd60e512caaeac45": {
+      "displayName": "TodoApiFunction/Code",
+      "source": {
+        "path": "asset.2f6bdd6f77fb561536225e9a7db2ec804607ee02b73034f3bd60e512caaeac45",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "033383278855-us-east-1-2cfb3cba": {
+          "bucketName": "cdk-hnb659fds-assets-033383278855-us-east-1",
+          "objectKey": "2f6bdd6f77fb561536225e9a7db2ec804607ee02b73034f3bd60e512caaeac45.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::033383278855:role/cdk-hnb659fds-file-publishing-role-033383278855-us-east-1"
+        }
+      }
+    },
+    "2667d34bdad28b0cb3d67fb48df92ebf829d4d6bb7b014914dc321db73de796e": {
+      "displayName": "TodoApiStack Template",
+      "source": {
+        "path": "TodoApiStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "033383278855-us-east-1-40ea378a": {
+          "bucketName": "cdk-hnb659fds-assets-033383278855-us-east-1",
+          "objectKey": "2667d34bdad28b0cb3d67fb48df92ebf829d4d6bb7b014914dc321db73de796e.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::033383278855:role/cdk-hnb659fds-file-publishing-role-033383278855-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,3 +1,6 @@
+packages:
+  - infra
+
 allowBuilds:
   esbuild: false
   sharp: false

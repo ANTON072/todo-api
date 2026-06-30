@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Phase 6 実装サマリー — AWSインフラ (CDK)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    padding: 32px 24px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 24px; font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: #64748b; margin-bottom: 36px; }
+  h2 {
+    font-size: 15px; font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin: 36px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1e293b;
+  }
+  p { color: #cbd5e1; font-size: 14px; margin-bottom: 10px; }
+
+  /* ── ゴール ── */
+  .goal-box {
+    background: #1e2d40;
+    border: 1px solid #2563eb44;
+    border-left: 4px solid #3b82f6;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .goal-box p { color: #bfdbfe; margin: 0; font-size: 14px; }
+
+  /* ── アーキテクチャ図 ── */
+  .arch {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #1a1f2e;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 8px;
+    overflow-x: auto;
+  }
+  .arch-box {
+    background: #262d3d;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: center;
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+  .arch-box .icon { font-size: 22px; display: block; margin-bottom: 4px; }
+  .arch-box .name { font-size: 12px; font-weight: 700; color: #f1f5f9; }
+  .arch-box .detail { font-size: 10px; color: #64748b; margin-top: 2px; }
+  .arch-arrow {
+    flex-shrink: 0;
+    color: #475569;
+    font-size: 20px;
+    padding: 0 10px;
+  }
+  .arch-box.apigw { border-color: #f59e0b44; }
+  .arch-box.lambda { border-color: #8b5cf644; }
+  .arch-box.rds { border-color: #10b98144; }
+  .arch-box.sm { border-color: #3b82f644; }
+
+  /* ── ファイル一覧 ── */
+  .files { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  .file-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #1a1f2e;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+  .file-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .badge-new { background: #14532d; color: #4ade80; }
+  .badge-mod { background: #431407; color: #fb923c; }
+  .badge-auto { background: #1e3a5f; color: #7dd3fc; }
+  .badge-core { background: #3b1f6e; color: #c4b5fd; }
+  .file-path { font-family: monospace; font-size: 13px; color: #a5b4fc; font-weight: 600; }
+  .file-desc { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+  /* ── リソース説明 ── */
+  .resources { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .resource-card {
+    background: #1a1f2e;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .resource-card .r-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .resource-card .r-icon { font-size: 18px; }
+  .resource-card .r-name { font-size: 13px; font-weight: 700; color: #f1f5f9; }
+  .resource-card .r-spec { font-size: 11px; color: #64748b; }
+  .resource-card ul { padding-left: 16px; }
+  .resource-card li { font-size: 12px; color: #94a3b8; margin-bottom: 3px; }
+
+  /* ── シークレット説明 ── */
+  .secret-box {
+    background: #1a1f2e;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+  }
+  .secret-box h3 { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+  .secret-box p { font-size: 12px; color: #94a3b8; margin: 0 0 6px; }
+  .kv { display: flex; gap: 8px; margin-bottom: 4px; align-items: baseline; }
+  .key { font-family: monospace; font-size: 12px; color: #a5b4fc; min-width: 200px; }
+  .val { font-size: 12px; color: #64748b; }
+  .val.warn { color: #f59e0b; }
+
+  /* ── フロー ── */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-step {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-left: 2px solid #2d3748;
+    margin-left: 12px;
+    padding-left: 20px;
+    position: relative;
+  }
+  .flow-step::before {
+    content: '';
+    width: 10px; height: 10px;
+    background: #3b82f6;
+    border-radius: 50%;
+    position: absolute;
+    left: -6px;
+    top: 16px;
+  }
+  .flow-step:last-child { border-left-color: transparent; }
+  .flow-step .step-label { font-size: 12px; font-weight: 700; color: #60a5fa; min-width: 80px; flex-shrink: 0; }
+  .flow-step .step-desc { font-size: 13px; color: #cbd5e1; }
+  .flow-step .step-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+  /* ── コマンド ── */
+  .cmd-block {
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #86efac;
+    margin-bottom: 8px;
+  }
+  .cmd-block .comment { color: #4b5563; }
+
+  .note {
+    background: #1c1a0f;
+    border: 1px solid #ca8a0444;
+    border-left: 3px solid #f59e0b;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #fde68a;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Phase 6 — AWSインフラ (CDK)</h1>
+<p class="subtitle">Cloudflare Workers から AWS Lambda + RDS へ移行するためのインフラ定義</p>
+
+<!-- ゴール -->
+<h2>Phase 6 でやったこと（一言）</h2>
+<div class="goal-box">
+  <p>「AWSに <strong>必要なリソース（サーバー・DB・ネットワーク）を自動で作る設定ファイル</strong>」を書いた。<br>
+  実際にAWSへ作成するのは Phase 7（<code>cdk deploy</code>）。</p>
+</div>
+
+<!-- アーキテクチャ図 -->
+<h2>構成図（リクエストの流れ）</h2>
+<div class="arch">
+  <div class="arch-box">
+    <span class="icon">🌐</span>
+    <div class="name">クライアント</div>
+    <div class="detail">ブラウザ / curl</div>
+  </div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-box apigw">
+    <span class="icon">🚪</span>
+    <div class="name">API Gateway</div>
+    <div class="detail">HTTP API</div>
+  </div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-box lambda">
+    <span class="icon">λ</span>
+    <div class="name">Lambda</div>
+    <div class="detail">Node.js 22 / 512MB</div>
+  </div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-box rds">
+    <span class="icon">🐘</span>
+    <div class="name">RDS</div>
+    <div class="detail">PostgreSQL 16</div>
+  </div>
+  <div class="arch-arrow" style="color:#3b82f6; font-size:14px; padding: 0 6px;">↕<br><span style="font-size:9px;color:#64748b">起動時</span></div>
+  <div class="arch-box sm">
+    <span class="icon">🔐</span>
+    <div class="name">Secrets Mgr</div>
+    <div class="detail">パスワード管理</div>
+  </div>
+</div>
+<p style="font-size:12px; color:#64748b; margin-bottom:0;">全リソースは同じ VPC（仮想ネットワーク）内に存在。RDS は Lambda からしかアクセスできない。</p>
+
+<!-- 作成・変更したファイル -->
+<h2>作成・変更したファイル</h2>
+
+<p style="font-size:13px; color:#94a3b8; margin-bottom:12px;">
+  実際に「考えて書く」必要があるのは <strong style="color:#c4b5fd;">★ 1ファイルだけ</strong>。
+  残りは <code>cdk init</code> コマンドが自動生成するボイラープレートか、定型コピペで済む。
+</p>
+
+<div class="files">
+  <div class="file-row" style="border-color:#7c3aed44; background:#1a1429;">
+    <span class="file-badge badge-core">★ 本体</span>
+    <div>
+      <div class="file-path">infra/lib/todo-api-stack.ts</div>
+      <div class="file-desc">
+        <strong style="color:#c4b5fd;">唯一「自分で考えて書く」ファイル。</strong>
+        VPC・RDS・Lambda・API Gateway など「何をどう作るか」をコードで定義する。
+        このプロジェクトでは約170行。
+      </div>
+    </div>
+  </div>
+  <div class="file-row">
+    <span class="file-badge badge-auto">自動生成</span>
+    <div>
+      <div class="file-path">infra/cdk.json</div>
+      <div class="file-desc"><code>cdk init</code> が生成するボイラープレート。CDK のバージョンや feature flag を管理するだけで、内容を読む必要はほぼない。</div>
+    </div>
+  </div>
+  <div class="file-row">
+    <span class="file-badge badge-auto">自動生成</span>
+    <div>
+      <div class="file-path">infra/tsconfig.json</div>
+      <div class="file-desc"><code>cdk init</code> が生成する TypeScript 設定。定型文なので変更しない。</div>
+    </div>
+  </div>
+  <div class="file-row">
+    <span class="file-badge badge-auto">自動生成</span>
+    <div>
+      <div class="file-path">infra/bin/app.ts</div>
+      <div class="file-desc"><code>cdk init</code> が生成するエントリーポイント。「どのスタックを・どのリージョンに作るか」の数行だけ書き換える。</div>
+    </div>
+  </div>
+  <div class="file-row">
+    <span class="file-badge badge-auto">自動生成</span>
+    <div>
+      <div class="file-path">infra/package.json</div>
+      <div class="file-desc"><code>cdk init</code> が生成する依存関係定義。<code>aws-cdk-lib</code> が入るだけ。</div>
+    </div>
+  </div>
+  <div class="file-row">
+    <span class="file-badge badge-new">NEW</span>
+    <div>
+      <div class="file-path">scripts/build-lambda.sh</div>
+      <div class="file-desc">アプリコードを Lambda 用に 1 ファイルにまとめる（バンドル）スクリプト。実行すると <code>dist-lambda/lambda.js</code> が生成される。esbuild の呼び出し1コマンドなので短い。</div>
+    </div>
+  </div>
+  <div class="file-row">
+    <span class="file-badge badge-mod">変更</span>
+    <div>
+      <div class="file-path">src/lambda.ts</div>
+      <div class="file-desc">DB のパスワードを <strong>Secrets Manager から起動時に自動取得</strong>するよう改修。以前はパスワードを直接環境変数に書いていた。</div>
+    </div>
+  </div>
+  <div class="file-row">
+    <span class="file-badge badge-mod">変更</span>
+    <div>
+      <div class="file-path">package.json</div>
+      <div class="file-desc"><code>pnpm build:lambda</code>（バンドル）と <code>pnpm cdk</code>（CDK コマンド）のショートカットを追加。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 各AWSリソースの説明 -->
+<h2>AWS に作られるリソース（6個）</h2>
+<div class="resources">
+  <div class="resource-card">
+    <div class="r-header">
+      <span class="r-icon">🌐</span>
+      <div>
+        <div class="r-name">VPC</div>
+        <div class="r-spec">仮想プライベートネットワーク</div>
+      </div>
+    </div>
+    <ul>
+      <li>Lambda と RDS を同じネットワークに入れる「箱」</li>
+      <li>パブリックサブネット × 2（AZ を分けて冗長化）</li>
+      <li>NAT ゲートウェイなし → <strong>コスト削減</strong></li>
+    </ul>
+  </div>
+  <div class="resource-card">
+    <div class="r-header">
+      <span class="r-icon">🛡️</span>
+      <div>
+        <div class="r-name">セキュリティグループ</div>
+        <div class="r-spec">ファイアウォール設定</div>
+      </div>
+    </div>
+    <ul>
+      <li>RDS は <strong>Lambda からの 5432 番ポートのみ</strong>許可</li>
+      <li>それ以外（インターネットなど）は全部ブロック</li>
+      <li>Lambda 自体はアウトバウンド全許可（外部 API を呼べる）</li>
+    </ul>
+  </div>
+  <div class="resource-card">
+    <div class="r-header">
+      <span class="r-icon">🐘</span>
+      <div>
+        <div class="r-name">RDS PostgreSQL</div>
+        <div class="r-spec">db.t3.micro / PostgreSQL 16</div>
+      </div>
+    </div>
+    <ul>
+      <li>データを永続保存するデータベース</li>
+      <li>db.t3.micro = 最小サイズ（<strong>コスト最小化</strong>）</li>
+      <li>ストレージ暗号化あり、パブリックアクセスなし</li>
+      <li>接続パスワードは CDK が自動生成→ Secrets Manager に保存</li>
+    </ul>
+  </div>
+  <div class="resource-card">
+    <div class="r-header">
+      <span class="r-icon">λ</span>
+      <div>
+        <div class="r-name">Lambda</div>
+        <div class="r-spec">Node.js 22 / 512MB / 30秒</div>
+      </div>
+    </div>
+    <ul>
+      <li>Hono アプリを動かすサーバー（サーバーレス）</li>
+      <li>リクエストが来たときだけ起動 → 待機コストゼロ</li>
+      <li>512MB・30 秒タイムアウト（better-auth の処理に余裕を持たせる）</li>
+    </ul>
+  </div>
+  <div class="resource-card">
+    <div class="r-header">
+      <span class="r-icon">🚪</span>
+      <div>
+        <div class="r-name">API Gateway HTTP API</div>
+        <div class="r-spec">エンドポイント公開</div>
+      </div>
+    </div>
+    <ul>
+      <li>インターネットからリクエストを受けて Lambda に渡す「入口」</li>
+      <li>HTTPS URL が自動で払い出される</li>
+      <li>CORS 設定あり（全オリジン許可）</li>
+    </ul>
+  </div>
+  <div class="resource-card">
+    <div class="r-header">
+      <span class="r-icon">🔐</span>
+      <div>
+        <div class="r-name">Secrets Manager</div>
+        <div class="r-spec">シークレット × 2</div>
+      </div>
+    </div>
+    <ul>
+      <li>DB パスワードをコードに書かずに管理する仕組み</li>
+      <li>Lambda 起動時に自動で取得して使う</li>
+      <li>詳細は下の「シークレットの中身」参照</li>
+    </ul>
+  </div>
+</div>
+
+<!-- シークレットの中身 -->
+<h2>Secrets Manager に保存するシークレット</h2>
+<div class="secret-box">
+  <h3>① DB シークレット（CDK が自動生成）</h3>
+  <p>RDS インスタンスのパスワードを CDK が自動で生成・保存する。手動作業不要。</p>
+  <div class="kv"><span class="key">username</span><span class="val">todoapi（固定）</span></div>
+  <div class="kv"><span class="key">password</span><span class="val">自動生成されたランダム文字列</span></div>
+  <div class="kv"><span class="key">host</span><span class="val">RDS のエンドポイント URL</span></div>
+  <div class="kv"><span class="key">port</span><span class="val">5432</span></div>
+  <div class="kv"><span class="key">dbname</span><span class="val">todoapi</span></div>
+</div>
+<div class="secret-box">
+  <h3>② アプリシークレット（デプロイ後に手動設定が必要）</h3>
+  <p>CDK がシークレットの「箱」だけ作る。値はデプロイ後にAWSコンソールで設定する。</p>
+  <div class="kv"><span class="key">BETTER_AUTH_SECRET</span><span class="val">CDK が自動生成（変更不要）</span></div>
+  <div class="kv"><span class="key">RESEND_API_KEY</span><span class="val warn">⚠️ "REPLACE_ME" → Resend ダッシュボードの値に変更する</span></div>
+  <div class="kv"><span class="key">ALLOWED_ORIGINS</span><span class="val warn">⚠️ 空文字 → 許可するフロントエンドの URL を設定する</span></div>
+</div>
+
+<!-- Lambda 起動時の流れ -->
+<h2>Lambda が起動したときの流れ（src/lambda.ts の改修内容）</h2>
+<div class="flow">
+  <div class="flow-step">
+    <span class="step-label">コールドスタート</span>
+    <div>
+      <div class="step-desc">Lambda コンテナが初めて起動する</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <span class="step-label">シークレット取得</span>
+    <div>
+      <div class="step-desc">Secrets Manager から DB パスワードとアプリシークレットを取得</div>
+      <div class="step-sub">2つのシークレットを並列で取得してレイテンシを最小化</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <span class="step-label">URL 組み立て</span>
+    <div>
+      <div class="step-desc"><code>DATABASE_URL</code> を組み立てる</div>
+      <div class="step-sub">例: <code>postgresql://todoapi:password@xxxx.rds.amazonaws.com:5432/todoapi?sslmode=require</code></div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <span class="step-label">リクエスト処理</span>
+    <div>
+      <div class="step-desc">以降のリクエストはキャッシュした値を使い回す（再取得しない）</div>
+      <div class="step-sub">Lambda コンテナが生きている間はコールドスタートのコストが発生しない</div>
+    </div>
+  </div>
+</div>
+
+<!-- 使えるコマンド -->
+<h2>Phase 6 で追加したコマンド</h2>
+<div class="cmd-block">
+<span class="comment"># Lambda 用バンドルを作る（cdk deploy の前に必ず実行）</span>
+pnpm build:lambda
+
+<span class="comment"># CDK コマンドのショートカット（infra/ に cd しなくてよい）</span>
+pnpm cdk synth              <span class="comment"># CloudFormation テンプレートを確認（AWSには何も作らない）</span>
+pnpm cdk diff --profile ougi-aws  <span class="comment"># 現在のAWSとの差分を確認</span>
+pnpm cdk deploy --profile ougi-aws  <span class="comment"># 実際にAWSにデプロイ（Phase 7）</span>
+</div>
+
+<div class="note">
+  ⚠️ <strong>Phase 6 はあくまで「設計図を書いた」段階。</strong>
+  AWSに実際にリソースが作られるのは Phase 7 の <code>cdk deploy</code> を実行したとき。
+</div>
+
+</body>
+</html>

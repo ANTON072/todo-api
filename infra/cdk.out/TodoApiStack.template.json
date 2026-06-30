@@ -1,0 +1,774 @@
+{
+ "Description": "todo-api: Lambda + RDS PostgreSQL + API Gateway HTTP API",
+ "Resources": {
+  "TodoApiVpc332DC4CE": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "TodoApiStack/TodoApiVpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/Resource"
+   }
+  },
+  "TodoApiVpcpublicSubnet1Subnet6D3F67D7": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "TodoApiStack/TodoApiVpc/publicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "TodoApiVpc332DC4CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet1/Subnet"
+   }
+  },
+  "TodoApiVpcpublicSubnet1RouteTableD46243FC": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "TodoApiStack/TodoApiVpc/publicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "TodoApiVpc332DC4CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet1/RouteTable"
+   }
+  },
+  "TodoApiVpcpublicSubnet1RouteTableAssociation6A1DB8C4": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "TodoApiVpcpublicSubnet1RouteTableD46243FC"
+    },
+    "SubnetId": {
+     "Ref": "TodoApiVpcpublicSubnet1Subnet6D3F67D7"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet1/RouteTableAssociation"
+   }
+  },
+  "TodoApiVpcpublicSubnet1DefaultRoute4E938460": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "TodoApiVpcIGW4C024E0B"
+    },
+    "RouteTableId": {
+     "Ref": "TodoApiVpcpublicSubnet1RouteTableD46243FC"
+    }
+   },
+   "DependsOn": [
+    "TodoApiVpcVPCGWE0CF304B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet1/DefaultRoute"
+   }
+  },
+  "TodoApiVpcpublicSubnet2SubnetD34B2DAE": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "TodoApiStack/TodoApiVpc/publicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "TodoApiVpc332DC4CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet2/Subnet"
+   }
+  },
+  "TodoApiVpcpublicSubnet2RouteTableAFCD637E": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "TodoApiStack/TodoApiVpc/publicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "TodoApiVpc332DC4CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet2/RouteTable"
+   }
+  },
+  "TodoApiVpcpublicSubnet2RouteTableAssociation21476B2F": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "TodoApiVpcpublicSubnet2RouteTableAFCD637E"
+    },
+    "SubnetId": {
+     "Ref": "TodoApiVpcpublicSubnet2SubnetD34B2DAE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet2/RouteTableAssociation"
+   }
+  },
+  "TodoApiVpcpublicSubnet2DefaultRoute3C3541F9": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "TodoApiVpcIGW4C024E0B"
+    },
+    "RouteTableId": {
+     "Ref": "TodoApiVpcpublicSubnet2RouteTableAFCD637E"
+    }
+   },
+   "DependsOn": [
+    "TodoApiVpcVPCGWE0CF304B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/publicSubnet2/DefaultRoute"
+   }
+  },
+  "TodoApiVpcIGW4C024E0B": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "TodoApiStack/TodoApiVpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/IGW"
+   }
+  },
+  "TodoApiVpcVPCGWE0CF304B": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "TodoApiVpcIGW4C024E0B"
+    },
+    "VpcId": {
+     "Ref": "TodoApiVpc332DC4CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiVpc/VPCGW"
+   }
+  },
+  "LambdaSg30A6108C": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "todo-api Lambda",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "TodoApiVpc332DC4CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/LambdaSg/Resource"
+   }
+  },
+  "RdsSg7F9F43B6": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "todo-api RDS",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "255.255.255.255/32",
+      "Description": "Disallow all traffic",
+      "FromPort": 252,
+      "IpProtocol": "icmp",
+      "ToPort": 86
+     }
+    ],
+    "VpcId": {
+     "Ref": "TodoApiVpc332DC4CE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/RdsSg/Resource"
+   }
+  },
+  "RdsSgfromTodoApiStackLambdaSg777F5F28543204D7DF8E": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Lambda to RDS",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "RdsSg7F9F43B6",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "LambdaSg30A6108C",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/RdsSg/from TodoApiStackLambdaSg777F5F28:5432"
+   }
+  },
+  "DbSecret685A0FA5": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Generated by the CDK for stack: ",
+       {
+        "Ref": "AWS::StackName"
+       }
+      ]
+     ]
+    },
+    "GenerateSecretString": {
+     "ExcludeCharacters": " %+~`#$&*()|[]{}:;<>?!'/@\"\\",
+     "GenerateStringKey": "password",
+     "PasswordLength": 30,
+     "SecretStringTemplate": "{\"username\":\"todoapi\"}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/DbSecret/Resource"
+   }
+  },
+  "DbSecretAttachment0609CE05": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "DbSecret685A0FA5"
+    },
+    "TargetId": {
+     "Ref": "TodoApiDb625E5A6B"
+    },
+    "TargetType": "AWS::RDS::DBInstance"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/DbSecret/Attachment/Resource"
+   }
+  },
+  "TodoApiDbSubnetGroupC26DCFB3": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnet group for TodoApiDb database",
+    "SubnetIds": [
+     {
+      "Ref": "TodoApiVpcpublicSubnet1Subnet6D3F67D7"
+     },
+     {
+      "Ref": "TodoApiVpcpublicSubnet2SubnetD34B2DAE"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiDb/SubnetGroup/Default"
+   }
+  },
+  "TodoApiDb625E5A6B": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "AllocatedStorage": "100",
+    "CopyTagsToSnapshot": true,
+    "DBInstanceClass": "db.t3.micro",
+    "DBName": "todoapi",
+    "DBSubnetGroupName": {
+     "Ref": "TodoApiDbSubnetGroupC26DCFB3"
+    },
+    "DeletionProtection": false,
+    "Engine": "postgres",
+    "EngineVersion": "16",
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "DbSecret685A0FA5"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "DbSecret685A0FA5"
+       },
+       ":SecretString:username::}}"
+      ]
+     ]
+    },
+    "PubliclyAccessible": false,
+    "StorageEncrypted": true,
+    "StorageType": "gp2",
+    "VPCSecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "RdsSg7F9F43B6",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiDb/Resource"
+   }
+  },
+  "AppSecretFAB5164C": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "GenerateSecretString": {
+     "ExcludePunctuation": false,
+     "GenerateStringKey": "BETTER_AUTH_SECRET",
+     "PasswordLength": 44,
+     "SecretStringTemplate": "{\"RESEND_API_KEY\":\"REPLACE_ME\",\"ALLOWED_ORIGINS\":\"\"}"
+    },
+    "Name": "todo-api/app"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/AppSecret/Resource"
+   }
+  },
+  "TodoApiFunctionServiceRoleF43BDA60": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "TodoApiVpcpublicSubnet1DefaultRoute4E938460",
+    "TodoApiVpcpublicSubnet1RouteTableAssociation6A1DB8C4",
+    "TodoApiVpcpublicSubnet2DefaultRoute3C3541F9",
+    "TodoApiVpcpublicSubnet2RouteTableAssociation21476B2F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiFunction/ServiceRole/Resource"
+   }
+  },
+  "TodoApiFunctionServiceRoleDefaultPolicy61A8B4A9": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Ref": "AppSecretFAB5164C"
+        },
+        {
+         "Ref": "DbSecret685A0FA5"
+        }
+       ]
+      },
+      {
+       "Action": "secretsmanager:GetSecretValue",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Ref": "AppSecretFAB5164C"
+        },
+        {
+         "Ref": "DbSecret685A0FA5"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "TodoApiFunctionServiceRoleDefaultPolicy61A8B4A9",
+    "Roles": [
+     {
+      "Ref": "TodoApiFunctionServiceRoleF43BDA60"
+     }
+    ]
+   },
+   "DependsOn": [
+    "TodoApiVpcpublicSubnet1DefaultRoute4E938460",
+    "TodoApiVpcpublicSubnet1RouteTableAssociation6A1DB8C4",
+    "TodoApiVpcpublicSubnet2DefaultRoute3C3541F9",
+    "TodoApiVpcpublicSubnet2RouteTableAssociation21476B2F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "TodoApiFunctionC789034C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-033383278855-us-east-1",
+     "S3Key": "2f6bdd6f77fb561536225e9a7db2ec804607ee02b73034f3bd60e512caaeac45.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "APP_URL": "https://placeholder.example.com",
+      "SKIP_EMAIL_VERIFICATION": "false",
+      "DB_HOST": {
+       "Fn::GetAtt": [
+        "TodoApiDb625E5A6B",
+        "Endpoint.Address"
+       ]
+      },
+      "DB_PORT": {
+       "Fn::GetAtt": [
+        "TodoApiDb625E5A6B",
+        "Endpoint.Port"
+       ]
+      },
+      "DB_SECRET_ARN": {
+       "Ref": "DbSecret685A0FA5"
+      },
+      "APP_SECRET_ARN": {
+       "Ref": "AppSecretFAB5164C"
+      }
+     }
+    },
+    "Handler": "lambda.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "TodoApiFunctionServiceRoleF43BDA60",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Timeout": 30,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "LambdaSg30A6108C",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "TodoApiVpcpublicSubnet1Subnet6D3F67D7"
+      },
+      {
+       "Ref": "TodoApiVpcpublicSubnet2SubnetD34B2DAE"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "TodoApiFunctionServiceRoleDefaultPolicy61A8B4A9",
+    "TodoApiFunctionServiceRoleF43BDA60",
+    "TodoApiVpcpublicSubnet1DefaultRoute4E938460",
+    "TodoApiVpcpublicSubnet1RouteTableAssociation6A1DB8C4",
+    "TodoApiVpcpublicSubnet2DefaultRoute3C3541F9",
+    "TodoApiVpcpublicSubnet2RouteTableAssociation21476B2F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiFunction/Resource",
+    "aws:asset:path": "asset.2f6bdd6f77fb561536225e9a7db2ec804607ee02b73034f3bd60e512caaeac45",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "TodoApiGatewayE3CDFD67": {
+   "Type": "AWS::ApiGatewayV2::Api",
+   "Properties": {
+    "CorsConfiguration": {
+     "AllowHeaders": [
+      "Content-Type",
+      "Authorization"
+     ],
+     "AllowMethods": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "OPTIONS"
+     ],
+     "AllowOrigins": [
+      "*"
+     ]
+    },
+    "Name": "todo-api",
+    "ProtocolType": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiGateway/Resource"
+   }
+  },
+  "TodoApiGatewayDefaultStageEC6A090E": {
+   "Type": "AWS::ApiGatewayV2::Stage",
+   "Properties": {
+    "ApiId": {
+     "Ref": "TodoApiGatewayE3CDFD67"
+    },
+    "AutoDeploy": true,
+    "StageName": "$default"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiGateway/DefaultStage/Resource"
+   }
+  },
+  "TodoApiGatewayANYproxyLambdaIntegrationC6863BA5": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "TodoApiGatewayE3CDFD67"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "TodoApiFunctionC789034C",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiGateway/ANY--{proxy+}/LambdaIntegration/Resource"
+   }
+  },
+  "TodoApiGatewayANYproxyLambdaIntegrationPermission40E04F5C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "TodoApiFunctionC789034C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:033383278855:",
+       {
+        "Ref": "TodoApiGatewayE3CDFD67"
+       },
+       "/*/*/{proxy+}"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiGateway/ANY--{proxy+}/LambdaIntegration-Permission"
+   }
+  },
+  "TodoApiGatewayANYproxyE43B7CA7": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "TodoApiGatewayE3CDFD67"
+    },
+    "AuthorizationType": "NONE",
+    "RouteKey": "ANY /{proxy+}",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "TodoApiGatewayANYproxyLambdaIntegrationC6863BA5"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/TodoApiGateway/ANY--{proxy+}/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/31RwW7CMAz9lt1Dxsq2ewGNcRpqEVfkBq8LtEkVOyBU9d+nNFDQkHZ6zy8vz5adyOR9LMdPcKKR2h1GlS5kmzOog4ATbVtUiWw3jRKzb7NZzcTKF5VWuS8MctBuLLOecQ1FhTf9pqVEVmlgbc1gDmRpGJ1BXgDjCc6XNpcqZQb1U6NhkaPyTvN54axv+gb/CktTOiTqhNuRbOfAUABhjsohi2u5NMRgFIo47JA0nz4IV2snqM+gGgyU6GQbO4fYCGtwJfLd5IPh4SXKnaigLnYg2w9v1HVB93yFrtZE2ppOaKhlm9m45B5XttKqX1xknaDJFoiQSaYBBE3k1KsD8hQIBTS6jOs9JrL9ZG7SRofvAUKZM5Txhj0JUjxXYOFepRvu+KfsfV0nMiTrnULRDxBytCmD4ctz47kTxu5Q7un5mLzKlzc5ftqT1iPnDesaZRbxF/jvLGucAgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TodoApiStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ApiUrl": {
+   "Description": "API Gateway endpoint URL",
+   "Value": {
+    "Fn::GetAtt": [
+     "TodoApiGatewayE3CDFD67",
+     "ApiEndpoint"
+    ]
+   }
+  },
+  "DbEndpoint": {
+   "Description": "RDS endpoint (for migration)",
+   "Value": {
+    "Fn::GetAtt": [
+     "TodoApiDb625E5A6B",
+     "Endpoint.Address"
+    ]
+   }
+  },
+  "DbSecretArn": {
+   "Description": "RDS credentials secret ARN",
+   "Value": {
+    "Ref": "DbSecret685A0FA5"
+   }
+  },
+  "AppSecretArn": {
+   "Description": "App secrets ARN (set RESEND_API_KEY here)",
+   "Value": {
+    "Ref": "AppSecretFAB5164C"
+   }
+  },
+  "LambdaFunctionName": {
+   "Description": "Lambda function name",
+   "Value": {
+    "Ref": "TodoApiFunctionC789034C"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

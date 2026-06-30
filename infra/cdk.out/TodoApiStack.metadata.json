@@ -1,0 +1,524 @@
+{
+  "/TodoApiStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/ApiUrl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiUrl"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:146:5)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/DbEndpoint": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbEndpoint"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:150:5)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/DbSecretArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSecretArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:154:5)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/AppSecretArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AppSecretArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:158:5)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/LambdaFunctionName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "LambdaFunctionName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:162:5)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/TodoApiStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpc332DC4CE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:17:17)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/IGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcIGW4C024E0B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:17:17)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/VPCGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcVPCGWE0CF304B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:17:17)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/LambdaSg/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "LambdaSg30A6108C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SecurityGroup2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:30:22)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/RdsSg/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "RdsSg7F9F43B6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SecurityGroup2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:36:19)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/RdsSg/from TodoApiStackLambdaSg777F5F28:5432": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "RdsSgfromTodoApiStackLambdaSg777F5F28543204D7DF8E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:42:11)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/DbSecret/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSecret685A0FA5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseSecret2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:45:22)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiDb/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiDb625E5A6B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:49:16)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/AppSecret/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AppSecretFAB5164C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Secret2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:69:23)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiFunction/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiFunctionC789034C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Function2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:83:16)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiGateway/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiGatewayE3CDFD67"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new HttpApi2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:121:21)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet1/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet1Subnet6D3F67D7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:268 in .pnpm...",
+        "Array.forEach (:)",
+        "....pnpm..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet1/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet1RouteTableD46243FC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:268 in .pnpm...",
+        "Array.forEach (:)",
+        "....pnpm..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet1/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet1RouteTableAssociation6A1DB8C4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:268 in .pnpm...",
+        "Array.forEach (:)",
+        "....pnpm..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet1/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet1DefaultRoute4E938460"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:208 in .pnpm...",
+        "Array.forEach (:)",
+        "...new Vpc2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:17:17)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet2/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet2SubnetD34B2DAE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:268 in .pnpm...",
+        "Array.forEach (:)",
+        "....pnpm..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet2/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet2RouteTableAFCD637E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:268 in .pnpm...",
+        "Array.forEach (:)",
+        "....pnpm..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet2/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet2RouteTableAssociation21476B2F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:268 in .pnpm...",
+        "Array.forEach (:)",
+        "....pnpm..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiVpc/publicSubnet2/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiVpcpublicSubnet2DefaultRoute3C3541F9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.js:1:208 in .pnpm...",
+        "Array.forEach (:)",
+        "...new Vpc2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:17:17)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/DbSecret/Attachment/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DbSecretAttachment0609CE05"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:49:16)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiDb/SubnetGroup/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiDbSubnetGroupC26DCFB3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new DatabaseInstance2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:49:16)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiFunction/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiFunctionServiceRoleF43BDA60"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Function2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:83:16)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiGateway/DefaultStage/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiGatewayDefaultStageEC6A090E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new HttpApi2 in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:121:21)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiGateway/ANY--{proxy+}/LambdaIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiGatewayANYproxyLambdaIntegrationPermission40E04F5C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:136:13)"
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiGateway/ANY--{proxy+}/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiGatewayANYproxyE43B7CA7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:136:13)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiFunction/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiFunctionServiceRoleDefaultPolicy61A8B4A9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.grantRead in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:103:14)",
+        "<anonymous> (/Users/katsushi.ohgi/Documents/todo-api/infra/bin/app.ts:8:1)"
+      ]
+    }
+  ],
+  "/TodoApiStack/TodoApiGateway/ANY--{proxy+}/LambdaIntegration/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TodoApiGatewayANYproxyLambdaIntegrationC6863BA5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../Users/katsushi.ohgi/Documents/todo-api/node_modules/.pnpm/aws-cdk-lib@2.260.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new TodoApiStack (/Users/katsushi.ohgi/Documents/todo-api/infra/lib/todo-api-stack.ts:136:13)"
+      ]
+    }
+  ]
+}

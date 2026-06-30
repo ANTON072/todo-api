@@ -217,3 +217,5 @@ vite.config.ts.timestamp-*
 note.md
 .dev.vars
 .wrangler
+dist-lambda/
+infra/dist/
